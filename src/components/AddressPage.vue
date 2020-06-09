@@ -182,9 +182,11 @@ export default {
           const { data } = response;
           const resData = [];
           let i = 0;
-          while (data.address[i] !== undefined) {
+          while (
+            data['one10y76c0kyj6d9hmngf0859yx49l4c75d5z77zxr'][i] !== undefined
+          ) {
             resData.push({
-              address: data.address[i],
+              address: data['one10y76c0kyj6d9hmngf0859yx49l4c75d5z77zxr'][i],
             });
             i++;
           }

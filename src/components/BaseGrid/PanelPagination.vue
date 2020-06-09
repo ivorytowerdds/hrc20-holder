@@ -4,7 +4,7 @@
       style="display: flex; flex-direction: row; justify-content: space-between;"
     >
       <div class="pagination-controls">
-        <span class="total-tx-num">{{ txCount }} validators</span>
+        <span class="total-tx-num">{{ txCount }} HUSD holders</span>
         <span class="page-controllers">
           <span class="page-navigator">
             <button
