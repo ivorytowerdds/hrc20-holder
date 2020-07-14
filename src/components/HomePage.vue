@@ -42,7 +42,7 @@
       <div v-if="!loading" class="container">
         <div class="explorer-card">
           <header>
-            <h1>{{ name }} Holders</h1>
+            <h1>HRC20 Contracts</h1>
           </header>
 
           <div class="explorer-card-body">
@@ -82,10 +82,10 @@ import BaseGrid from './BaseGrid';
 import PanelPagination from './BaseGrid/PanelPagination';
 import axios from 'axios';
 import { formatNumber, shortDecimals } from '../filter';
-import Address from './fields/Address';
+import Address from './fields/ContractAddress';
 
 export default {
-  name: 'AddressPage',
+  name: 'HomePage',
   components: {
     LoadingMessage,
     BaseGrid,
@@ -95,8 +95,6 @@ export default {
     return {
       loading: true,
       allTxs: [],
-      address: null,
-      name: null,
       sort: {
         property: null,
         order: `asc`,
@@ -110,9 +108,9 @@ export default {
   },
   watch: {
     $route() {
-      if (this.$route.params.address !== this.address) {
-        this.getData();
-      }
+      // if (this.$route.params.address !== (this.address && this.address.id)) {
+      //   this.getAddress();
+      // }
     },
   },
   computed: {
@@ -159,8 +157,23 @@ export default {
           value: `address`,
           key: item => item.address,
           align: 'left',
-          // width: '96px',
+          //width: '600px',
           renderComponent: Address,
+        },
+        {
+          title: `Name`,
+          value: `name`,
+          key: item => item.address,
+          align: 'right',
+          width: '200px',
+        },
+        {
+          title: `Transactions`,
+          value: `transactions`,
+          key: item => item.address,
+          align: 'right',
+          width: '400px',
+          ender: value => formatNumber(value),
         },
       ];
 
@@ -173,17 +186,13 @@ export default {
   methods: {
     changePage(value) {
       this.$router.replace({
-        name: 'AddressPage',
+        name: 'HomePage',
         query: { page: value + 1, txType: this.$route.query.txType },
       });
     },
     getData() {
-      const address = this.$route.params.address;
-
       axios
-        .get(
-          `https://harmony-explorer-mainnet.firebaseio.com/HRC-holder/${address}.json`
-        )
+        .get('https://harmony-explorer-mainnet.firebaseio.com/HRC-holder.json')
         .then(response => {
           const { data } = response;
           const resData = [];
@@ -191,12 +200,12 @@ export default {
           while (data['address'][i] !== undefined) {
             resData.push({
               address: data['address'][i],
+              name: data['name'][i],
+              transactions: data['transactions'][i],
             });
             i++;
           }
           this.allTxs = resData;
-          this.address = address;
-          this.name = data['name'];
           this.loading = false;
         });
     },
